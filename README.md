@@ -8,3 +8,4 @@
 * Ruby
 * Rails
 * Git(HTTPSからSSH通信へ変更)
+*20220801 from M2 Mac
