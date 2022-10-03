@@ -8,7 +8,7 @@ class Attendance < ApplicationRecord
   
   validate :started_at_than_finished_at_fast_if_invalid
   
-  validate :invalid_without_a_finished_at, on: :update_one_month
+  validate :invalid_without_finished_at, on: :invalid_without_finished_at
   
   
   def finished_at_is_invalid_without_a_started_at
@@ -21,7 +21,7 @@ class Attendance < ApplicationRecord
     end
   end
   
-  def invalid_without_a_finished_at
+  def invalid_without_finished_at
     errors.add(:finished_at, "が必要です") if started_at.present? && finished_at.blank?
   end
   

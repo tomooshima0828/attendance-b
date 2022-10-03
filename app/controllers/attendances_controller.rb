@@ -36,19 +36,25 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
-        if (item[:started_at].present? && item[:finished_at].blank?)
-          flash[:danger] = "無効な入力データがあったため、更新をキャンセルしました。"
-          redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
-        end
+        # if (item[:started_at].present? && item[:finished_at].blank?)
+        #   flash[:danger] = "無効な入力データがあったため、更新をキャンセルしました。"
+        #   redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+        # end
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        attendance.assign_attributes(item)
+        if attendance.worked_on == Date.today
+          attendance.save!
+        else
+          attendance.save!(context: :invalid_without_finished_at)
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあったため、更新をキャンセルしました。"
-    redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+    # redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+    redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
   
