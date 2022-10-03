@@ -45,7 +45,7 @@ class AttendancesController < ApplicationController
         if attendance.worked_on == Date.today
           attendance.save!
         else
-          attendance.save!(context: :invalid_without_finished_at)
+          attendance.save!(context: :update_working_hours_except_today)
         end
       end
     end
